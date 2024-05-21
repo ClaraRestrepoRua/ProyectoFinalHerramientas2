@@ -1,0 +1,64 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Radio+Canada+Big:ital,wght@0,400..700;1,400..700&display=swap');
+
+body {
+    background: #f8e8fc;
+    font-family: "Poppins", sans-serif;
+}
+
+.form {
+    width: 300px;
+    margin: 20vh auto 0 auto;
+    padding: 20px;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 0 10px rgba(0, 0, 0, .2);
+    background-color: whitesmoke;
+    border-radius: 20px;
+    font-size: 12px;
+}
+
+.form h1 {
+    color: #0f2027;
+    text-align: center;
+}
+
+.form button {
+    padding: 10px;
+    margin-top: 10px;
+    width: 100%;
+    color: #fff;
+    background-color: rgb(160, 101, 73);
+    border: none;
+    border-radius: 10px;
+}
+
+.input-control {
+    display: flex;
+    flex-direction: column;
+}
+
+.input-control input {
+    border: 2px solid #f0f0f0;
+    border-radius: 10px;
+    display: block;
+    font-size: 12px;
+    padding: 10px;
+    width: 93%;
+}
+
+.input-control input:focus {
+    outline: 0;
+}
+
+.input-control.success input {
+    border-color: #09c372;
+}
+
+.input-control.success input {
+    color: #ff3860;
+}
+
+.input-control .error {
+    color: #ff3860;
+    font-size: 9px;
+    height: 13px;
+}
