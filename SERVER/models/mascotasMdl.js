@@ -2,21 +2,24 @@
 const connection = require('../database');
 
 class Mascota {
-    constructor(idMascota, nombreMascota, pesoMascota, idUsuario) {
+    constructor(idMascota, nombreMascota, pesoMascota, idUsuario, nombreUsuario, apellidoUsuario, telefonoUsuario) {
         this.idMascota = idMascota;
         this.nombreMascota = nombreMascota;
         this.pesoMascota = pesoMascota;
         this.idUsuario = idUsuario;
+        this.nombreUsuario = nombreUsuario;
+        this.apellidoUsuario = apellidoUsuario;
+        this.telefonoUsuario = telefonoUsuario;
     }
 
     // Método para obtener todas las mascotas
     static getAll(callback) {
-        connection.query('SELECT * FROM mascotas', (err, results) => {
+        connection.query('SELECT * FROM mascotas INNER JOIN usuarios ON mascotas.idUsuario = usuarios.idUsuario;', (err, results) => {
             if (err) {
                 callback(err, null);
                 return;
             }
-            const mascotas = results.map(row => new Mascota(row.idMascota, row.nombreMascota, row.pesoMascota, row.idUsuario));
+            const mascotas = results.map(row => new Mascota(row.idMascota, row.nombreMascota, row.pesoMascota, row.idUsuario, row.nombreUsuario, row.apellidoUsuario, row.telefonoUsuario));
             callback(null, mascotas);
         });
     }

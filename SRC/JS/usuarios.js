@@ -33,8 +33,6 @@ async function enviarFormularioUsuario(event) {
     }
 }
 
-
-
 // Escuchar el evento submit del formulario de usuarios
 document.getElementById('frmUsuarios').addEventListener('submit', enviarFormularioUsuario);
 
