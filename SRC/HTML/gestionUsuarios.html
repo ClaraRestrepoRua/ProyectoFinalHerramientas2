@@ -10,28 +10,78 @@
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 </head>
 
-<body class="body">
-    <form class="form" id="frmUsuarios" action="/">
-        <h1>Usuarios</h1>
-        <div class="input-control">
-            <label for="username">Nombre:</label>
-            <input id="nombreUsuario" name="nombreUsuario" type="text">
-            <div class="error"></div>
+<body>
+
+    <section id="navbar-section">
+    </section>
+    <div class="container p-5">
+        <div class="row gx-5">
+            <div class="col">
+                <form class="form" id="frmUsuarios" action="/">
+                    <h1>Usuarios</h1>
+                    <div class="input-control">
+                        <label for="username">Nombre:</label>
+                        <input id="nombreUsuario" name="nombreUsuario" type="text">
+                        <div class="error"></div>
+                    </div>
+                    <div class="input-control">
+                        <label for="documento">Apellido:</label>
+                        <input id="apellidoUsuario" name="apellidoUsuario" type="text">
+                        <div class="error"></div>
+                    </div>
+                    <div class="input-control">
+                        <label for="documento">Telefono:</label>
+                        <input id="telefonoUsuario" name="telefonoUsuario" type="text">
+                        <div class="error"></div>
+                    </div>
+                    <button type="submit">Enviar</button>
+                </form>
+            </div>
+            <div class="col">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">First</th>
+                            <th scope="col">Last</th>
+                            <th scope="col">Handle</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th scope="row">1</th>
+                            <td>Mark</td>
+                            <td>Otto</td>
+                            <td>@mdo</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">2</th>
+                            <td>Jacob</td>
+                            <td>Thornton</td>
+                            <td>@fat</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">3</th>
+                            <td colspan="2">Larry the Bird</td>
+                            <td>@twitter</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
-        <div class="input-control">
-            <label for="documento">Apellido:</label>
-            <input id="apellidoUsuario" name="apellidoUsuario" type="text">
-            <div class="error"></div>
-        </div>
-        <div class="input-control">
-            <label for="documento">Telefono:</label>
-            <input id="telefonoUsuario" name="telefonoUsuario" type="text">
-            <div class="error"></div>
-        </div>
-        <button type="submit">Enviar</button>
-    </form>
+    </div>
+
 
 </body>
+<script>    // JavaScript para cargar el contenido de la barra de navegación
+    document.addEventListener("DOMContentLoaded", function () {
+        fetch('navBar.html')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('navbar-section').innerHTML = data;
+            })
+            .catch(error => console.error('Error al cargar la barra de navegación:', error));
+    });</script>
 <script src="../JS/usuarios.js"></script>
 
 </html>
