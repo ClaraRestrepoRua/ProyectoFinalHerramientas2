@@ -33,6 +33,17 @@ async function enviarFormularioUsuario(event) {
     }
 }
 
+// Escuchar el DOM
+document.addEventListener("DOMContentLoaded", async function () {
+    try {
+        await usuarioService.fetchUsuarios();
+        usuarioService.tableUsuarios('tableUsuarios');
+
+    } catch (error) {
+        console.error('Error al cargar los datos:', error);
+    }
+});
+
 // Escuchar el evento submit del formulario de usuarios
 document.getElementById('frmUsuarios').addEventListener('submit', enviarFormularioUsuario);
 

@@ -86,19 +86,11 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
-    <script>
-        // JavaScript para cargar el contenido de la barra de navegación
-        document.addEventListener("DOMContentLoaded", function () {
-            fetch('navBar.html')
-                .then(response => response.text())
-                .then(data => {
-                    document.getElementById('navbar-section').innerHTML = data;
-                })
-                .catch(error => console.error('Error al cargar la barra de navegación:', error));
-        });
-    </script>
-    </script>
-    <script src="../JS/veterinario.js"></script>
+    <script src="../JS/navBar.js"></script>
+    <script src="../JS/cita.js"></script>
+    <script src="../JS/usuarioService.js"></script>
+    <script src="../JS/mascotasService.js"></script>
+    <script src="../JS/veterinarioService.js"></script>
 
 </body>
 

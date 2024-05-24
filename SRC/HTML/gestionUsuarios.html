@@ -42,31 +42,15 @@
                 <table class="table">
                     <thead>
                         <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">First</th>
-                            <th scope="col">Last</th>
-                            <th scope="col">Handle</th>
+                            <th scope="col" class="text-center">#</th>
+                            <th scope="col" class="text-center">Nombre</th>
+                            <th scope="col" class="text-center">Peso</th>
+                            <th scope="col" class="text-center">Dueño</th>
+                            <th scope="col" class="text-center">Telefono</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <th scope="row">1</th>
-                            <td>Mark</td>
-                            <td>Otto</td>
-                            <td> <button type="submit"><i class="fa-solid fa-trash"></i></button> <button
-                                    type="submit"><i class="fa-solid fa-pencil"></i></button> </td>
-                        </tr>
-                        <tr>
-                            <th scope="row">2</th>
-                            <td>Jacob</td>
-                            <td>Thornton</td>
-                            <td>@fat</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">3</th>
-                            <td colspan="2">Larry the Bird</td>
-                            <td>@twitter</td>
-                        </tr>
+                    <tbody id="tableUsuarios">
+                        <!-- Aquí se insertarán las filas de la tabla -->
                     </tbody>
                 </table>
             </div>
@@ -76,17 +60,9 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
-    <script>    // JavaScript para cargar el contenido de la barra de navegación
-        document.addEventListener("DOMContentLoaded", function () {
-            fetch('navBar.html')
-                .then(response => response.text())
-                .then(data => {
-                    document.getElementById('navbar-section').innerHTML = data;
-                })
-                .catch(error => console.error('Error al cargar la barra de navegación:', error));
-        });</script>
+    <script src="../JS/navBar.js"></script>
     <script src="../JS/usuarios.js"></script>
+    <script src="../JS/usuarioService.js"></script>
 </body>
-
 
 </html>
