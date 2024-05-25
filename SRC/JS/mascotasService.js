@@ -24,13 +24,17 @@ class MascotaService {
             }
 
             const nuevaMascota = await response.json();
-            this.mascotas.push(nuevaMascota); // Agregar la nueva mascota a la lista local
-            return nuevaMascota;
+
+            // Hacer una llamada adicional para obtener la información completa de la mascota
+            const mascotaCompleta = await this.findById(nuevaMascota.idMascota);
+            this.mascotas.push(mascotaCompleta); // Agregar la nueva mascota a la lista local con la información completa
+            return mascotaCompleta;
         } catch (error) {
             console.error('Error:', error.message);
             throw error;
         }
     }
+
 
     async findById(idMascota) {
         try {
@@ -139,13 +143,12 @@ class MascotaService {
             row.innerHTML = `
                 <td scope="col" class="text-center">${index + 1}</td>
                 <td scope="col" class="text-center">${mascota.nombreMascota}</td>
-                <td scope="col" class="text-center">${mascota.pesoMascota}</td>
+                <td scope="col" class="text-center">${mascota.pesoMascota}Kg</td>
+                <td scope="col" class="text-center">${mascota.usuario.nombreUsuario} ${mascota.usuario.apellidoUsuario}</td>
+                <td scope="col" class="text-center">${mascota.usuario.telefonoUsuario}</td>
                 <td scope="col" class="text-center">
                     <button type="button" class="btn btn-danger btn-sm" onclick="sendDeleteMascota(${mascota.idMascota})">
                         <i class="fas fa-trash-alt"></i>
-                    </button>
-                    <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#modalEditarMascota" onclick="abrirModalEdicion(${mascota.idMascota})">
-                        <i class="fas fa-edit"></i>
                     </button>
                 </td>
             `;

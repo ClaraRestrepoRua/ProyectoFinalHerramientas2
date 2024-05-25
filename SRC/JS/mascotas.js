@@ -5,7 +5,7 @@ async function sendSaveMascota(event) {
     const formData = new FormData(event.target);
     const nombreMascota = formData.get('nombreMascota');
     const pesoMascota = formData.get('pesoMascota');
-    const idUsuario = formData.get('idUsuario');
+    const idUsuario = formData.get('selectIdUsuario');
 
     try {
         const nuevaMascota = await mascotaService.saveMascota(nombreMascota, pesoMascota, idUsuario);
@@ -15,32 +15,6 @@ async function sendSaveMascota(event) {
 
         // Actualizar la lista de mascotas
         mascotaService.tableMascotas('tableMascotas');
-    } catch (error) {
-        alert(error.message);
-        console.error('Error:', error.message);
-    }
-}
-
-// Función para enviar el formulario de actualización de mascotas
-async function sendUpdateMascota(event) {
-    event.preventDefault();
-
-    const formData = new FormData(event.target);
-    const idMascota = formData.get('editIdMascota');
-    const nombreMascota = formData.get('editNombreMascota');
-    const pesoMascota = formData.get('editPesoMascota');
-    const idUsuario = formData.get('editIdUsuario');
-
-    try {
-        const mascotaActualizada = await mascotaService.updateMascota(idMascota, nombreMascota, pesoMascota, idUsuario);
-        alert('Mascota actualizada:\n' + JSON.stringify(mascotaActualizada));
-
-        // Actualizar la lista de mascotas
-        mascotaService.tableMascotas('tableMascotas');
-
-        // Cerrar el modal
-        const modal = bootstrap.Modal.getInstance(document.getElementById('modalEditarMascota'));
-        modal.hide();
     } catch (error) {
         alert(error.message);
         console.error('Error:', error.message);
@@ -61,26 +35,6 @@ function sendDeleteMascota(idMascota) {
     }
 }
 
-// Función para abrir el modal de edición de mascotas
-async function abrirModalEdicionMascota(idMascota) {
-    try {
-        const mascota = await mascotaService.findById(idMascota);
-
-        // Llenar el formulario del modal con los datos de la mascota
-        const formEditarMascota = document.getElementById('formEditarMascota');
-        formEditarMascota.querySelector('#editIdMascota').value = mascota.idMascota;
-        formEditarMascota.querySelector('#editIdUsuario').value = mascota.idUsuario;
-        formEditarMascota.querySelector('#editNombreMascota').value = mascota.nombreMascota;
-        formEditarMascota.querySelector('#editPesoMascota').value = mascota.pesoMascota;
-
-        // Mostrar el modal
-        const modal = new bootstrap.Modal(document.getElementById('modalEditarMascota'));
-        modal.show();
-    } catch (error) {
-        console.error('Error al abrir el modal de edición de mascotas:', error);
-    }
-}
-
 // Escuchar el DOM
 document.addEventListener("DOMContentLoaded", async function () {
     try {
@@ -96,4 +50,3 @@ document.addEventListener("DOMContentLoaded", async function () {
 
 // Escuchar el evento submit del formulario de mascotas
 document.getElementById('frmMascotas').addEventListener('submit', sendSaveMascota);
-document.getElementById('formEditarMascota').addEventListener('submit', sendUpdateMascota);

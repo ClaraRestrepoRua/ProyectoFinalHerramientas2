@@ -62,39 +62,6 @@ class UsuarioService {
         }
     }
 
-
-
-    async updateUsuario(idUsuario, nombreUsuario, apellidoUsuario, telefonoUsuario) {
-        try {
-            const response = await fetch(`${this.apiUrl}/usuarios/${idUsuario}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    nombreUsuario,
-                    apellidoUsuario,
-                    telefonoUsuario
-                })
-            });
-
-            if (!response.ok) {
-                const errorText = await response.text();
-                throw new Error(`Error al actualizar el usuario: ${errorText}`);
-            }
-
-            const usuarioActualizado = await response.json();
-            const index = this.usuarios.findIndex(usuario => usuario.idUsuario === idUsuario);
-            if (index !== -1) {
-                this.usuarios[index] = usuarioActualizado; // Actualizar el usuario en la lista local
-            }
-            return usuarioActualizado;
-        } catch (error) {
-            console.error('Error:', error.message);
-            throw error;
-        }
-    }
-
     async fetchUsuarios() {
         try {
             const response = await fetch(`${this.apiUrl}/usuarios`);
@@ -146,9 +113,6 @@ class UsuarioService {
                 <td scope="col" class="text-center">
                 <button type="button" class="btn btn-danger btn-sm" onclick="sendDeleteUsuario(${usuario.idUsuario})">
                     <i class="fas fa-trash-alt"></i>
-                </button>
-                <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#modalEditarUsuario" onclick="abrirModalEdicion(${usuario.idUsuario})">
-                    <i class="fas fa-edit"></i>
                 </button>
             </td>
                 `;

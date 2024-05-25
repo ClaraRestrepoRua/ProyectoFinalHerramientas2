@@ -1,4 +1,5 @@
-document.getElementById('frmVeterinario').addEventListener('submit', async (event) => {
+// Función para enviar el formulario de veterinarios
+async function sendSaveVeterinario(event) {
     event.preventDefault();
 
     const formData = new FormData(event.target);
@@ -7,29 +8,42 @@ document.getElementById('frmVeterinario').addEventListener('submit', async (even
     const telefonoVeterinario = formData.get('telefonoVeterinario');
 
     try {
-        const response = await fetch('http://localhost:3000/api/veterinarios', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                nombreVeterinario: nombreVeterinario,
-                apellidoVeterinario: apellidoVeterinario,
-                telefonoVeterinario: telefonoVeterinario
-            })
-        });
-
-        if (!response.ok) {
-            const errorText = await response.text(); // Obtener el mensaje de error del servidor
-            throw new Error(`Error al guardar el veterinario: ${errorText}`);
-        }
-
-        const nuevoVeterinario = await response.json();
-        // Mostrar la respuesta en una alerta
+        const nuevoVeterinario = await veterinarioService.saveVeterinario(nombreVeterinario, apellidoVeterinario, telefonoVeterinario);
         alert('Veterinario creado:\n' + JSON.stringify(nuevoVeterinario));
+        // Limpiar los campos del formulario después de que se haya creado el veterinario
+        event.target.reset();
+
+        // Actualizar la lista de veterinarios
+        veterinarioService.tableVeterinarios('tableVeterinarios');
     } catch (error) {
         alert(error.message);
         console.error('Error:', error.message);
-        // Aquí podrías mostrar un mensaje de error al usuario
+    }
+}
+
+// Función para eliminar un veterinario
+function sendDeleteVeterinario(idVeterinario) {
+    if (confirm('¿Estás seguro de que quieres eliminar este veterinario?')) {
+        veterinarioService.deleteVeterinario(idVeterinario)
+            .then(() => {
+                // Actualizar la tabla después de eliminar
+                veterinarioService.tableVeterinarios('tableVeterinarios');
+            })
+            .catch(error => {
+                alert(`Error al eliminar el veterinario: ${error.message}`);
+            });
+    }
+}
+
+// Escuchar el DOM
+document.addEventListener("DOMContentLoaded", async function () {
+    try {
+        await veterinarioService.fetchVeterinarios();
+        veterinarioService.tableVeterinarios('tableVeterinarios');
+    } catch (error) {
+        console.error('Error al cargar los datos de los veterinarios:', error);
     }
 });
+
+// Escuchar el evento submit del formulario de veterinarios
+document.getElementById('frmVeterinarios').addEventListener('submit', sendSaveVeterinario);

@@ -1,30 +1,54 @@
 // modelos/historiaClinicaMdl.js
 const connection = require('../database');
+const Mascota = require('./mascotasMdl');
+const Veterinario = require('./veterinariosMdl');
+const Usuario = require('./usuariosMdl');
 
 class HistoriaClinica {
-    constructor(idHistoriaClinica, descripcionClinica, medicamento, idMascota, idVeterinario) {
+    constructor(idHistoriaClinica, descripcionClinica, medicamento, idMascota, idVeterinario, mascota = null, veterinario = null) {
         this.idHistoriaClinica = idHistoriaClinica;
         this.descripcionClinica = descripcionClinica;
         this.medicamento = medicamento;
         this.idMascota = idMascota;
         this.idVeterinario = idVeterinario;
+        this.mascota = mascota; // Instancia de Mascota
+        this.veterinario = veterinario;
     }
 
     // Método para obtener todas las historias clínicas
     static getAll(callback) {
-        connection.query('SELECT * FROM historiaclinica', (err, results) => {
+        const query = `
+            SELECT *
+            FROM historiaclinica
+            INNER JOIN mascotas ON historiaclinica.idMascota = mascotas.idMascota
+            INNER JOIN veterinarios ON historiaclinica.idVeterinario = veterinarios.idVeterinario
+            INNER JOIN usuarios ON mascotas.idUsuario = usuarios.idUsuario;;
+        `;
+        connection.query(query, (err, results) => {
             if (err) {
                 callback(err, null);
                 return;
             }
-            const historiasClinicas = results.map(row => new HistoriaClinica(row.idHistoriaClinica, row.descripcionClinica, row.medicamento, row.idMascota, row.idVeterinario));
+            const historiasClinicas = results.map(row => {
+                const usuario = new Usuario(row.idUsuario, row.nombreUsuario, row.apellidoUsuario, row.telefonoUsuario);
+                const mascota = new Mascota(row.idMascota, row.nombreMascota, row.pesoMascota, row.idUsuario, usuario);
+                const veterinario = new Veterinario(row.idVeterinario, row.nombreVeterinario, row.apellidoVeterinario, row.telefonoVeterinario);
+                return new HistoriaClinica(row.idHistoriaClinica, row.descripcionClinica, row.medicamento, row.idMascota, row.idVeterinario, mascota, veterinario);
+            });
             callback(null, historiasClinicas);
         });
     }
 
     // Método para obtener una historia clínica por su ID
     static getById(id, callback) {
-        connection.query('SELECT * FROM historiaclinica WHERE idHistoriaClinica = ?', [id], (err, results) => {
+        const query = `
+            SELECT *
+            FROM historiaclinica
+            INNER JOIN mascotas ON historiaclinica.idMascota = mascotas.idMascota
+            INNER JOIN veterinarios ON historiaclinica.idVeterinario = veterinarios.idVeterinario
+            WHERE historiaclinica.idHistoriaClinica = ?;
+        `;
+        connection.query(query, [id], (err, results) => {
             if (err) {
                 callback(err, null);
                 return;
@@ -33,14 +57,18 @@ class HistoriaClinica {
                 callback(new Error('Historia clínica no encontrada'), null);
                 return;
             }
-            const historiaClinica = new HistoriaClinica(results[0].idHistoriaClinica, results[0].descripcionClinica, results[0].medicamento, results[0].idMascota, results[0].idVeterinario);
+            const row = results[0];
+            const mascota = new Mascota(row.idMascota, row.nombreMascota, row.pesoMascota, row.idUsuario);
+            const veterinario = new Veterinario(row.idVeterinario, row.nombreVeterinario, row.apellidoVeterinario, row.telefonoVeterinario);
+            const historiaClinica = new HistoriaClinica(row.idHistoriaClinica, row.descripcionClinica, row.medicamento, row.idMascota, row.idVeterinario, mascota, veterinario);
             callback(null, historiaClinica);
         });
     }
 
     // Método para crear una nueva historia clínica
     static create(descripcionClinica, medicamento, idMascota, idVeterinario, callback) {
-        connection.query('INSERT INTO historiaclinica (descripcionClinica, medicamento, idMascota, idVeterinario) VALUES (?, ?, ?, ?)', [descripcionClinica, medicamento, idMascota, idVeterinario], (err, results) => {
+        const query = 'INSERT INTO historiaclinica (descripcionClinica, medicamento, idMascota, idVeterinario) VALUES (?, ?, ?, ?)';
+        connection.query(query, [descripcionClinica, medicamento, idMascota, idVeterinario], (err, results) => {
             if (err) {
                 callback(err, null);
                 return;
@@ -52,7 +80,8 @@ class HistoriaClinica {
 
     // Método para actualizar una historia clínica por su ID
     static update(id, descripcionClinica, medicamento, idMascota, idVeterinario, callback) {
-        connection.query('UPDATE historiaclinica SET descripcionClinica = ?, medicamento = ?, idMascota = ?, idVeterinario = ? WHERE idHistoriaClinica = ?', [descripcionClinica, medicamento, idMascota, idVeterinario, id], (err, results) => {
+        const query = 'UPDATE historiaclinica SET descripcionClinica = ?, medicamento = ?, idMascota = ?, idVeterinario = ? WHERE idHistoriaClinica = ?';
+        connection.query(query, [descripcionClinica, medicamento, idMascota, idVeterinario, id], (err, results) => {
             if (err) {
                 callback(err);
                 return;
@@ -63,7 +92,8 @@ class HistoriaClinica {
 
     // Método para eliminar una historia clínica por su ID
     static delete(id, callback) {
-        connection.query('DELETE FROM historiaclinica WHERE idHistoriaClinica = ?', [id], (err, results) => {
+        const query = 'DELETE FROM historiaclinica WHERE idHistoriaClinica = ?';
+        connection.query(query, [id], (err, results) => {
             if (err) {
                 callback(err);
                 return;
