@@ -33,6 +33,13 @@ exports.create = (req, res) => {
             return;
         }
         res.status(201).json(nuevaHistoriaClinica);
+        HistoriaClinica.getAll((err, historiasClinicas) => {
+            if (err) {
+                console.error('Error al obtener historias clínicas:', err);
+                return;
+            }
+            HistoriaClinica.updateHistoriasClinicasFile(historiasClinicas);
+        });
     });
 };
 
@@ -46,6 +53,13 @@ exports.update = (req, res) => {
             return;
         }
         res.status(200).json({ message: 'Historia clínica actualizada correctamente' });
+        HistoriaClinica.getAll((err, historiasClinicas) => {
+            if (err) {
+                console.error('Error al obtener historias clínicas:', err);
+                return;
+            }
+            HistoriaClinica.updateHistoriasClinicasFile(historiasClinicas);
+        });
     });
 };
 
@@ -58,5 +72,12 @@ exports.delete = (req, res) => {
             return;
         }
         res.status(200).json({ message: 'Historia clínica eliminada correctamente' });
+        HistoriaClinica.getAll((err, historiasClinicas) => {
+            if (err) {
+                console.error('Error al obtener historias clínicas:', err);
+                return;
+            }
+            HistoriaClinica.updateHistoriasClinicasFile(historiasClinicas);
+        });
     });
 };

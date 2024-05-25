@@ -1,5 +1,7 @@
 // modelos/historiaClinicaMdl.js
 const connection = require('../database');
+const fs = require('fs');
+const path = require('path');
 const Mascota = require('./mascotasMdl');
 const Veterinario = require('./veterinariosMdl');
 const Usuario = require('./usuariosMdl');
@@ -11,8 +13,20 @@ class HistoriaClinica {
         this.medicamento = medicamento;
         this.idMascota = idMascota;
         this.idVeterinario = idVeterinario;
-        this.mascota = mascota; // Instancia de Mascota
+        this.mascota = mascota;
         this.veterinario = veterinario;
+    }
+
+    static updateHistoriasClinicasFile(historiasClinicas) {
+        const data = historiasClinicas.map(historiaClinica => `${historiaClinica.idHistoriaClinica}, ${historiaClinica.descripcionClinica}, ${historiaClinica.medicamento}, ${historiaClinica.mascota.idMascota}, ${historiaClinica.mascota.nombreMascota}, ${historiaClinica.mascota.pesoMascota}, ${historiaClinica.idVeterinario}${historiaClinica.veterinario.idVeterinario}, ${historiaClinica.veterinario.nombreVeterinario}, ${historiaClinica.veterinario.apellidoVeterinario}, ${historiaClinica.veterinario.telefonoVeterinario}`).join('\n');
+        const filePath = path.join(__dirname, '..', '..', 'DATA', 'historiasClinicas.txt');
+        fs.writeFile(filePath, data, err => {
+            if (err) {
+                console.error('Error al escribir en el archivo de historias clínicas:', err);
+            } else {
+                console.log('Archivo de historias clínicas actualizado');
+            }
+        });
     }
 
     // Método para obtener todas las historias clínicas

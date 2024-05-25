@@ -33,6 +33,13 @@ exports.create = (req, res) => {
             return;
         }
         res.status(201).json(nuevaCita);
+        Cita.getAll((err, citas) => {
+            if (err) {
+                console.error('Error al obtener citas:', err);
+                return;
+            }
+            Cita.updateCitasFile(citas);
+        });
     });
 };
 
@@ -46,6 +53,13 @@ exports.update = (req, res) => {
             return;
         }
         res.status(200).json({ message: 'Cita actualizada correctamente' });
+        Cita.getAll((err, citas) => {
+            if (err) {
+                console.error('Error al obtener citas:', err);
+                return;
+            }
+            Cita.updateCitasFile(citas);
+        });
     });
 };
 
@@ -58,5 +72,12 @@ exports.delete = (req, res) => {
             return;
         }
         res.status(200).json({ message: 'Cita eliminada correctamente' });
+        Cita.getAll((err, citas) => {
+            if (err) {
+                console.error('Error al obtener citas:', err);
+                return;
+            }
+            Cita.updateCitasFile(citas);
+        });
     });
 };

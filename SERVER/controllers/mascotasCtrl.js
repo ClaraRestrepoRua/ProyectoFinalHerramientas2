@@ -33,6 +33,13 @@ exports.create = (req, res) => {
             return;
         }
         res.status(201).json(nuevaMascota);
+        Mascota.getAll((err, mascotas) => {
+            if (err) {
+                console.error('Error al obtener mascotas:', err);
+                return;
+            }
+            Mascota.updateMascotasFile(mascotas);
+        });
     });
 };
 
@@ -46,6 +53,13 @@ exports.update = (req, res) => {
             return;
         }
         res.status(200).json({ message: 'Mascota actualizada correctamente' });
+        Mascota.getAll((err, mascotas) => {
+            if (err) {
+                console.error('Error al obtener mascotas:', err);
+                return;
+            }
+            Mascota.updateMascotasFile(mascotas);
+        });
     });
 };
 
@@ -58,5 +72,12 @@ exports.delete = (req, res) => {
             return;
         }
         res.status(200).json({ message: 'Mascota eliminada correctamente' });
+        Mascota.getAll((err, mascotas) => {
+            if (err) {
+                console.error('Error al obtener mascotas:', err);
+                return;
+            }
+            Mascota.updateMascotasFile(mascotas);
+        });
     });
 };

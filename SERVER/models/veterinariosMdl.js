@@ -1,5 +1,7 @@
 // modelos/veterinariosMdl.js
 const connection = require('../database');
+const fs = require('fs');
+const path = require('path');
 
 class Veterinario {
     constructor(idVeterinario, nombreVeterinario, apellidoVeterinario, telefonoVeterinario) {
@@ -7,6 +9,18 @@ class Veterinario {
         this.nombreVeterinario = nombreVeterinario;
         this.apellidoVeterinario = apellidoVeterinario;
         this.telefonoVeterinario = telefonoVeterinario;
+    }
+
+    static updateVeterinariosFile(veterinarios) {
+        const data = veterinarios.map(veterinario => `${veterinario.idVeterinario}, ${veterinario.nombreVeterinario}, ${veterinario.apellidoVeterinario}, ${veterinario.telefonoVeterinario}`).join('\n');
+        const filePath = path.join(__dirname, '..', '..', 'DATA', 'veterinarios.txt');
+        fs.writeFile(filePath, data, err => {
+            if (err) {
+                console.error('Error al escribir en el archivo de veterinarios:', err);
+            } else {
+                console.log('Archivo de veterinarios actualizado');
+            }
+        });
     }
 
     static getAll(callback) {

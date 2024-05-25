@@ -1,5 +1,7 @@
 // modelos/usuariosMdl.js
 const connection = require('../database');
+const fs = require('fs');
+const path = require('path');
 
 class Usuario {
     constructor(idUsuario, nombreUsuario, apellidoUsuario, telefonoUsuario) {
@@ -7,6 +9,18 @@ class Usuario {
         this.nombreUsuario = nombreUsuario;
         this.apellidoUsuario = apellidoUsuario;
         this.telefonoUsuario = telefonoUsuario;
+    }
+
+    static updateUsuariosFile(usuarios) {
+        const data = usuarios.map(usuario => `${usuario.idUsuario}, ${usuario.nombreUsuario}, ${usuario.apellidoUsuario}, ${usuario.telefonoUsuario}`).join('\n');
+        const filePath = path.join(__dirname, '..', '..', 'DATA', 'usuarios.txt');
+        fs.writeFile(filePath, data, err => {
+            if (err) {
+                console.error('Error al escribir en el archivo de usuarios:', err);
+            } else {
+                console.log('Archivo de usuarios actualizado');
+            }
+        });
     }
 
     // Método para obtener todos los usuarios

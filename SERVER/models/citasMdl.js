@@ -1,5 +1,7 @@
 // models/citasMdl.js
 const connection = require('../database');
+const fs = require('fs');
+const path = require('path');
 const Usuario = require('./usuariosMdl');
 const Mascota = require('./mascotasMdl');
 const Veterinario = require('./veterinariosMdl');
@@ -14,6 +16,18 @@ class Cita {
         this.usuario = usuario;
         this.mascota = mascota;
         this.veterinario = veterinario;
+    }
+
+    static updateCitasFile(citas) {
+        const data = citas.map(cita => `${cita.idCita}, ${cita.fechaCita}, ${cita.idUsuario}, ${cita.usuario.nombreUsuario}, ${cita.usuario.apellidoUsuario}, ${cita.usuario.telefonoUsuario}, ${cita.mascota.idMascota}, ${cita.mascota.nombreMascota}, ${cita.mascota.pesoMascota}, ${cita.veterinario.idVeterinario}, ${cita.veterinario.nombreVeterinario}, ${cita.veterinario.apellidoVeterinario}, ${cita.veterinario.telefonoVeterinario}`).join('\n');
+        const filePath = path.join(__dirname, '..', '..', 'DATA', 'citas.txt');
+        fs.writeFile(filePath, data, err => {
+            if (err) {
+                console.error('Error al escribir en el archivo de citas:', err);
+            } else {
+                console.log('Archivo de citas actualizado');
+            }
+        });
     }
 
     // Método para obtener todas las citas

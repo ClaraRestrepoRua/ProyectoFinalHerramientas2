@@ -33,6 +33,13 @@ exports.create = (req, res) => {
             return;
         }
         res.status(201).json(nuevoVeterinario);
+        Veterinario.getAll((err, veterinarios) => {
+            if (err) {
+                console.error('Error al obtener veterinarios:', err);
+                return;
+            }
+            Veterinario.updateVeterinariosFile(veterinarios);
+        });
     });
 };
 
@@ -46,6 +53,13 @@ exports.update = (req, res) => {
             return;
         }
         res.status(200).json({ message: 'Veterinario actualizado correctamente' });
+        Veterinario.getAll((err, veterinarios) => {
+            if (err) {
+                console.error('Error al obtener veterinarios:', err);
+                return;
+            }
+            Veterinario.updateVeterinariosFile(veterinarios);
+        });
     });
 };
 
@@ -58,5 +72,12 @@ exports.delete = (req, res) => {
             return;
         }
         res.status(200).json({ message: 'Veterinario eliminado correctamente' });
+        Veterinario.getAll((err, veterinarios) => {
+            if (err) {
+                console.error('Error al obtener veterinarios:', err);
+                return;
+            }
+            Veterinario.updateVeterinariosFile(veterinarios);
+        });
     });
 };

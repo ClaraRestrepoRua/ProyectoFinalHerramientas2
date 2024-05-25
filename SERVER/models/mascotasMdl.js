@@ -1,5 +1,7 @@
 // modelos/mascotasMdl.js
 const connection = require('../database');
+const fs = require('fs');
+const path = require('path');
 
 const Usuario = require('./usuariosMdl');
 
@@ -10,6 +12,18 @@ class Mascota {
         this.pesoMascota = pesoMascota;
         this.idUsuario = idUsuario;
         this.usuario = usuario;
+    }
+
+    static updateMascotasFile(mascotas) {
+        const data = mascotas.map(mascota => `${mascota.idMascota}, ${mascota.nombreMascota}, ${mascota.pesoMascota}, ${mascota.idUsuario}, ${mascota.usuario.nombreUsuario}, ${mascota.usuario.apellidoUsuario}, ${mascota.usuario.telefonoUsuario}`).join('\n');
+        const filePath = path.join(__dirname, '..', '..', 'DATA', 'mascotas.txt');
+        fs.writeFile(filePath, data, err => {
+            if (err) {
+                console.error('Error al escribir en el archivo de mascotas:', err);
+            } else {
+                console.log('Archivo de mascotas actualizado');
+            }
+        });
     }
 
     // Método para obtener todas las mascotas

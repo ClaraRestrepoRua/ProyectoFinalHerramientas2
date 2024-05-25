@@ -33,6 +33,14 @@ exports.create = (req, res) => {
             return;
         }
         res.status(201).json(nuevoUsuario);
+        // Actualizar el archivo de usuarios después de eliminar uno existente
+        Usuario.getAll((err, usuarios) => {
+            if (err) {
+                console.error('Error al obtener usuarios:', err);
+                return;
+            }
+            Usuario.updateUsuariosFile(usuarios);
+        });
     });
 };
 
@@ -46,6 +54,14 @@ exports.update = (req, res) => {
             return;
         }
         res.status(200).json({ message: 'Usuario actualizado correctamente' });
+        // Actualizar el archivo de usuarios después de actualizar uno existente
+        Usuario.getAll((err, usuarios) => {
+            if (err) {
+                console.error('Error al obtener usuarios:', err);
+                return;
+            }
+            Usuario.updateUsuariosFile(usuarios);
+        });
     });
 };
 
@@ -58,5 +74,13 @@ exports.delete = (req, res) => {
             return;
         }
         res.status(200).json({ message: 'Usuario eliminado correctamente' });
+        // Actualizar el archivo de usuarios después de eliminar uno existente
+        Usuario.getAll((err, usuarios) => {
+            if (err) {
+                console.error('Error al obtener usuarios:', err);
+                return;
+            }
+            Usuario.updateUsuariosFile(usuarios);
+        });
     });
 };
