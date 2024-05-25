@@ -4,6 +4,97 @@ class UsuarioService {
         this.usuarios = [];
     }
 
+    async saveUsuario(nombreUsuario, apellidoUsuario, telefonoUsuario) {
+        try {
+            const response = await fetch(`${this.apiUrl}/usuarios`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    nombreUsuario,
+                    apellidoUsuario,
+                    telefonoUsuario
+                })
+            });
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(`Error al guardar el usuario: ${errorText}`);
+            }
+
+            const nuevoUsuario = await response.json();
+            this.usuarios.push(nuevoUsuario); // Agregar el nuevo usuario a la lista local
+            return nuevoUsuario;
+        } catch (error) {
+            console.error('Error:', error.message);
+            throw error;
+        }
+    }
+
+    async findById(idUsuario) {
+        try {
+            const response = await fetch(`${this.apiUrl}/usuarios/${idUsuario}`);
+            if (!response.ok) {
+                throw new Error(`Error al obtener el usuario: ${response.statusText}`);
+            }
+            const usuario = await response.json();
+            return usuario;
+        } catch (error) {
+            console.error(error.message);
+            throw error;
+        }
+    }
+
+    async deleteUsuario(idUsuario) {
+        try {
+            const response = await fetch(`${this.apiUrl}/usuarios/${idUsuario}`, {
+                method: 'DELETE'
+            });
+            if (!response.ok) {
+                throw new Error(`Error al eliminar el usuario: ${response.statusText}`);
+            }
+            // Remover el usuario eliminado del arreglo local
+            this.usuarios = this.usuarios.filter(usuario => usuario.idUsuario !== idUsuario);
+        } catch (error) {
+            console.error(error.message);
+            throw error;
+        }
+    }
+
+
+
+    async updateUsuario(idUsuario, nombreUsuario, apellidoUsuario, telefonoUsuario) {
+        try {
+            const response = await fetch(`${this.apiUrl}/usuarios/${idUsuario}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    nombreUsuario,
+                    apellidoUsuario,
+                    telefonoUsuario
+                })
+            });
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(`Error al actualizar el usuario: ${errorText}`);
+            }
+
+            const usuarioActualizado = await response.json();
+            const index = this.usuarios.findIndex(usuario => usuario.idUsuario === idUsuario);
+            if (index !== -1) {
+                this.usuarios[index] = usuarioActualizado; // Actualizar el usuario en la lista local
+            }
+            return usuarioActualizado;
+        } catch (error) {
+            console.error('Error:', error.message);
+            throw error;
+        }
+    }
+
     async fetchUsuarios() {
         try {
             const response = await fetch(`${this.apiUrl}/usuarios`);
@@ -17,7 +108,7 @@ class UsuarioService {
         }
     }
 
-    mostrarListaUsuarios(selectElementId) {
+    showListUsuarios(selectElementId) {
         const selectUsuario = document.getElementById(selectElementId);
 
         // Limpiar el select
@@ -53,7 +144,7 @@ class UsuarioService {
                 <td scope="col" class="text-center">${usuario.apellidoUsuario}</td>
                 <td scope="col" class="text-center">${usuario.telefonoUsuario}</td>
                 <td scope="col" class="text-center">
-                <button type="button" class="btn btn-danger btn-sm" onclick="eliminarUsuario(${usuario.idUsuario})">
+                <button type="button" class="btn btn-danger btn-sm" onclick="sendDeleteUsuario(${usuario.idUsuario})">
                     <i class="fas fa-trash-alt"></i>
                 </button>
                 <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#modalEditarUsuario" onclick="abrirModalEdicion(${usuario.idUsuario})">

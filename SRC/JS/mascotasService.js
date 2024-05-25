@@ -4,15 +4,30 @@ class MascotaService {
         this.mascotas = [];
     }
 
-    async fetchMascotas() {
+    async saveMascota(nombreMascota, pesoMascota, idUsuario) {
         try {
-            const response = await fetch(`${this.apiUrl}/mascotas`);
+            const response = await fetch(`${this.apiUrl}/mascotas`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    nombreMascota,
+                    pesoMascota,
+                    idUsuario
+                })
+            });
+
             if (!response.ok) {
-                throw new Error(`Error al obtener la lista de mascotas: ${response.statusText}`);
+                const errorText = await response.text();
+                throw new Error(`Error al guardar la mascota: ${errorText}`);
             }
-            this.mascotas = await response.json();
+
+            const nuevaMascota = await response.json();
+            this.mascotas.push(nuevaMascota); // Agregar la nueva mascota a la lista local
+            return nuevaMascota;
         } catch (error) {
-            console.error(error.message);
+            console.error('Error:', error.message);
             throw error;
         }
     }
@@ -31,7 +46,6 @@ class MascotaService {
         }
     }
 
-
     async deleteMascota(idMascota) {
         try {
             const response = await fetch(`${this.apiUrl}/mascotas/${idMascota}`, {
@@ -48,7 +62,51 @@ class MascotaService {
         }
     }
 
-    selectMascotas(selectElementId) {
+    async updateMascota(idMascota, nombreMascota, pesoMascota, idUsuario) {
+        try {
+            const response = await fetch(`${this.apiUrl}/mascotas/${idMascota}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    nombreMascota,
+                    pesoMascota,
+                    idUsuario
+                })
+            });
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(`Error al actualizar la mascota: ${errorText}`);
+            }
+
+            const mascotaActualizada = await response.json();
+            const index = this.mascotas.findIndex(mascota => mascota.idMascota === idMascota);
+            if (index !== -1) {
+                this.mascotas[index] = mascotaActualizada; // Actualizar la mascota en la lista local
+            }
+            return mascotaActualizada;
+        } catch (error) {
+            console.error('Error:', error.message);
+            throw error;
+        }
+    }
+
+    async fetchMascotas() {
+        try {
+            const response = await fetch(`${this.apiUrl}/mascotas`);
+            if (!response.ok) {
+                throw new Error(`Error al obtener la lista de mascotas: ${response.statusText}`);
+            }
+            this.mascotas = await response.json();
+        } catch (error) {
+            console.error(error.message);
+            throw error;
+        }
+    }
+
+    showListMascotas(selectElementId) {
         const selectMascota = document.getElementById(selectElementId);
 
         // Limpiar el select
@@ -64,7 +122,7 @@ class MascotaService {
         this.mascotas.forEach(mascota => {
             const option = document.createElement('option');
             option.value = mascota.idMascota;
-            option.textContent = mascota.nombreMascota;
+            option.textContent = `${mascota.nombreMascota}`;
             selectMascota.appendChild(option);
         });
     }
@@ -81,32 +139,17 @@ class MascotaService {
             row.innerHTML = `
                 <td scope="col" class="text-center">${index + 1}</td>
                 <td scope="col" class="text-center">${mascota.nombreMascota}</td>
-                <td scope="col" class="text-center">${mascota.pesoMascota}Kg</td>
-                <td scope="col" class="text-center">${mascota.nombreUsuario} ${mascota.apellidoUsuario}</td>
-                <td scope="col" class="text-center">${mascota.telefonoUsuario}</td>
+                <td scope="col" class="text-center">${mascota.pesoMascota}</td>
                 <td scope="col" class="text-center">
-                <button type="button" class="btn btn-danger btn-sm" onclick="eliminarMascota(${mascota.idMascota})">
-                    <i class="fas fa-trash-alt"></i>
-                </button>
-                <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#modalEditarMascota" onclick="abrirModalEdicion(${mascota.idMascota})">
-                    <i class="fas fa-edit"></i>
-                </button>
-            </td>
-                `;
+                    <button type="button" class="btn btn-danger btn-sm" onclick="sendDeleteMascota(${mascota.idMascota})">
+                        <i class="fas fa-trash-alt"></i>
+                    </button>
+                    <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#modalEditarMascota" onclick="abrirModalEdicion(${mascota.idMascota})">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                </td>
+            `;
         });
-    }
-}
-
-function eliminarMascota(idMascota) {
-    if (confirm('¿Estás seguro de que quieres eliminar esta mascota?')) {
-        mascotaService.deleteMascota(idMascota)
-            .then(() => {
-                // Actualizar la tabla después de eliminar
-                mascotaService.tableMascotas('tableMascotas');
-            })
-            .catch(error => {
-                alert(`Error al eliminar la mascota: ${error.message}`);
-            });
     }
 }
 
